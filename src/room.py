@@ -8,7 +8,7 @@ class Room:
         self.description = description
         # self.items = items
         # self.n_to = self
-        self.n_to = n_to
+        self.n_to = self
         self.s_to = self
         self.e_to = self
         self.w_to = self
