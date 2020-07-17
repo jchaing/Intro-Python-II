@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -33,6 +34,8 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+print(f'line 37 {room}')
+
 #
 # Main
 #
@@ -49,3 +52,31 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+player_create = str(input("Create a player name: "))
+player = Player(player_create, room['outside'])
+
+
+# current_room = room['outside']
+
+# character = Player(current_room)
+print(f'Welcome {player.name}')
+print(player.current_room.name)
+print(player.current_room.description)
+
+move = ''
+while move != "q":
+    move = str(input("Choose a direction:\n"))
+    if move == "n":
+        player.current_room = player.current_room.n_to
+    elif move == "s":
+        player.current_room = player.current_room.s_to
+    elif move == "w":
+        player.current_room = player.current_room.w_to
+    elif move == "e":
+        player.current_room = player.current_room.e_to
+    else:
+        print("You cannot go that way")
+    print(player)
+
+print('You quitter')
