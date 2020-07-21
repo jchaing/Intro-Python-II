@@ -2,7 +2,7 @@ from room import Room
 from player import Player
 from item import Item
 
-# items
+# Items
 
 items = {
     "sword": Item("sword", "2 handed broad sword"),
@@ -86,13 +86,10 @@ print(player.current_room.description)
 print("--------------------------------------")
 
 
-# current_room = room['outside']
-
-# character = Player(current_room)
-
+# Empty string for player_input
 player_input = ""
 
-
+# Checks new location input if it has room attribute, then returns new room
 def check_new_location(direction, current_location):
     attr = f"{direction}_to"
     if hasattr(current_location, attr):
@@ -100,7 +97,9 @@ def check_new_location(direction, current_location):
 
 
 def take_item(item_selection, current_player):
+    # Checks for item in room
     for item in current_player.current_room.items:
+        # If item is in room, add to inventory and remove from room list
         if item.name == item_selection:
             current_player.items.append(item)
             current_player.current_room.items = [
@@ -112,8 +111,10 @@ def take_item(item_selection, current_player):
 
 
 def drop_item(item_selection, current_player):
+    # check if item is in inventory
     for item in current_player.items:
         if item.name == item_selection:
+            # if item is in inventory, add to room list and remove from inventory
             current_player.current_room.items.append(item)
             current_player.items = [
                 item for item in current_player.items if item.name != item_selection
@@ -123,7 +124,7 @@ def drop_item(item_selection, current_player):
 
 while player_input != "q":
 
-    # Movement Selection
+    # Input Selection
     player_input = str(
         input(
             "Choose a direction: [n] North [e] East [s] South [w] West [i] inventory [q] Quit\nOr enter [get] [item] / [drop] [item]\n"
@@ -132,8 +133,9 @@ while player_input != "q":
 
     parse_selection = player_input.split(" ")
 
+    # checks if user enters 1 word: direction, inventory or quit
     if len(parse_selection) == 1:
-        # Cardinal Direction
+        # Cardinal Direction input
         if (
             player_input == "n"
             or player_input == "s"
@@ -141,7 +143,6 @@ while player_input != "q":
             or player_input == "e"
         ):
             new_location = check_new_location(player_input, player.current_room)
-            # print(new_location)
             if new_location:
                 player.current_room = new_location
                 print("-------------------------------------")
@@ -154,32 +155,41 @@ while player_input != "q":
                     f"{player.name} tries to head {player_input}, but cannot go that way"
                 )
 
+        # displays players inventory
         elif player_input == "i":
             if len(player.items) > 0:
                 print([item.name for item in player.items])
             else:
                 print(f"{player.name}'s inventory is empty")
 
-        # Quit the game
+        # quit the game
         elif player_input == "q":
             print(f"Sorry to see you go, {player.name}. Come back soon!")
 
+        # invalid selection
         else:
             print(f"Invalid selection, please try again!")
 
+    # if user enters 2 words, determine if get or drop item
     elif len(parse_selection) == 2:
         if parse_selection[0] == "get":
+            # process input for take_item function
             take = take_item(parse_selection[1], player)
+            # if success, call on_take method to print the result
             if take:
                 print(items[parse_selection[1]].on_take())
+            # else, print error
             else:
                 print(
                     f"{player.current_room.name} doesn't contain {parse_selection[1]}"
                 )
         elif parse_selection[0] == "drop":
+            # process input for drop_item function
             drop = drop_item(parse_selection[1], player)
+            # if success, call on_drop method to print result
             if drop:
                 print(items[parse_selection[1]].on_drop())
+            # else, print error
             else:
                 print(f"{player.name} does not have {parse_selection[1]}")
         else:
